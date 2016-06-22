@@ -19,7 +19,6 @@ public abstract class DAOImpl <T, I extends Serializable> {
 
 	}
 
-
 	public T save(T entity) {
 
 		T saved = null;
@@ -31,12 +30,10 @@ public abstract class DAOImpl <T, I extends Serializable> {
 		return saved;
 	}
 
-
 	public void remove(T entity) {
 		getEntityManager().getTransaction().begin();
 		getEntityManager().remove(entity);
 		getEntityManager().getTransaction().commit();
-
 	}
 
 
@@ -47,7 +44,6 @@ public abstract class DAOImpl <T, I extends Serializable> {
 		} catch (NoResultException e) {
 			return null;
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")

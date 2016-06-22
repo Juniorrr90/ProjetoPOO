@@ -1,0 +1,149 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.cadastroProva.title']}" />
+	</ui:define>
+	
+	<ui:define name="principal">
+	
+	<h1><p:outputLabel value="#{msg['pages.cadastroProva.menu']}" /> </h1>
+ 	<h:form id="formProvas">
+
+		<p:panelGrid columns="2">
+			<p:outputLabel value="#{msg['pages.cadastroProva.faculdade']}" />
+			<p:inputText value="#{provaManagedBean.prova.faculdade}" />
+
+			<p:outputLabel value="#{msg['pages.cadastroProva.disciplina.nome']}" />
+			<p:selectOneMenu value="#{provaManagedBean.disciplina}"
+				converter="converterDisciplina">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.cadastroProva.disciplina.msg']}" />
+				<f:selectItems value="#{provaManagedBean.disciplinas}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.nome}" />
+			</p:selectOneMenu>
+
+            <p:outputLabel value="#{msg['pages.cadastroProva.conteudos']}" />
+        <p:selectManyMenu id="perguntas" 
+        value="#{provaManagedBean.conteudosselecionados}" 
+        converter="converterConteudo"
+                          var="sc" filter="true" filterMatchMode="contains" showCheckbox="true">
+            <f:selectItems value="#{provaManagedBean.conteudos}" var="perg" 
+            itemLabel="#{cont.nome}" itemValue="#{cont}" />
+ 
+            <p:column>
+                <h:outputText styleClass="ui-theme ui-theme-" />
+            </p:column>
+ 
+            <p:column>
+                <h:outputText value="#{sc.nome}" />
+            </p:column>
+        </p:selectManyMenu>
+            
+             <p:outputLabel for="button" value="Data:" />
+             <p:calendar id="button" value="#{provaManagedBean.prova.dataAplicacao}" showOn="button" />
+            
+			<p:outputLabel value="#{msg['pages.cadastroProva.curso']}" />
+			<p:inputText value="#{provaManagedBean.prova.curso}" />
+			
+			<p:outputLabel value="#{msg['pages.cadastroProva.turma']}" />
+			<p:inputText value="#{provaManagedBean.prova.turma}" />
+			
+			<p:outputLabel value="#{msg['pages.cadastroProva.nivel']}" />
+			<p:inputText value="#{provaManagedBean.prova.nivel}" />
+			
+			<p:outputLabel value="#{msg['pages.cadastroProva.quantidade']}" />
+			<p:inputText value="#{provaManagedBean.prova.quantidade}" />
+
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSalvar']}" action="#{provaManagedBean.salvar}"
+			update=":formProvas, :formTableProvas" />
+	</h:form>
+
+    <h3><p:outputLabel value="#{msg['pages.cadastroProva.tableTitle']}" /> </h3>
+    
+	<h:form id="formTableProvas">
+	    
+		<p:dataTable value="#{provaManagedBean.provas}" var="prod"
+			editable="true" id="tableProvas">
+
+            <p:ajax event="rowEdit" listener="#{provaManagedBean.onRowEdit}" update="tableProvas"/>
+
+			<p:column headerText="#{msg['pages.cadastroProva.codigo']}">
+				<h:outputText value="#{prod.codigo}" />
+			</p:column>
+
+			<p:column headerText="#{msg['pages.cadastroProva.faculdade']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.faculdade}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="faculdade" value="#{prod.faculdade}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroProva.disciplina.nome']}">
+				<h:outputText value="#{prod.disciplina.nome}" />
+			</p:column>
+
+			<p:column headerText="#{msg['pages.cadastroProva.curso']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.curso}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="curso" value="#{prod.curso}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroProva.turma']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.turma}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="turma" value="#{prod.turma}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroProva.nivel']}">
+				<h:outputText value="#{prod.nivel}" />
+			</p:column>
+		
+			<p:column headerText="#{msg['pages.cadastroProva.dataAplicacao']}">
+            <h:outputText value="#{prod.dataAplicacao}">
+                <f:convertDateTime pattern="dd/MM/yyyy" />
+            </h:outputText>
+            </p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroProva.tempo']}">
+				<h:outputText value="#{prod.tempo}" />
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroProva.quantidade']}">
+				<h:outputText value="#{prod.quantidade}" />
+			</p:column>
+			
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+					<p:rowEditor />
+					
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{provaManagedBean.remove(prod)}"
+						update=":formTableProvas" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+	</ui:define>
+</ui:composition>

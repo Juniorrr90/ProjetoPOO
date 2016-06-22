@@ -1,0 +1,134 @@
+<ui:composition template="templateMenu.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui2="http://java.sun.com/jsf/facelets"
+	xmlns:tm="http://java.sun.com/jsf/composite/terminal/1_0/components">
+	
+	<ui:define name="title">
+		<h:outputText value="#{msg['pages.cadastroDissertativa.title']}" />
+	</ui:define>
+	
+	<ui:define name="principal">
+	
+	<h1><p:outputLabel value="#{msg['pages.cadastroDissertativa.menu']}" /> </h1>
+ 	<h:form id="formDissertativas">
+
+		<p:panelGrid columns="2">
+			<p:outputLabel value="#{msg['pages.cadastroDissertativa.enunciado']}" />
+			<p:inputText value="#{dissertativaManagedBean.dissertativa.enunciado}" />
+
+			<p:outputLabel value="#{msg['pages.cadastroDissertativa.conteudo.nome']}" />
+			<p:selectOneMenu value="#{dissertativaManagedBean.conteudo}"
+				converter="converterConteudo">
+				<f:selectItem itemValue="" itemLabel="#{msg['pages.cadastroDissertativa.conteudo.msg']}" />
+				<f:selectItems value="#{dissertativaManagedBean.conteudos}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.nome}" />
+			</p:selectOneMenu>
+
+            <p:outputLabel value="#{msg['pages.cadastroDissertativa.respostadis']}" />
+			<p:inputText value="#{dissertativaManagedBean.dissertativa.respostadis}" />
+
+			<p:outputLabel value="#{msg['pages.cadastroDissertativa.nivel']}" />
+			<p:inputText value="#{dissertativaManagedBean.dissertativa.nivel}" />
+
+            <p:outputLabel value="#{msg['pages.cadastroDissertativa.tempo']}" />
+			<p:inputText value="#{dissertativaManagedBean.dissertativa.tempo}" />
+			
+		</p:panelGrid>
+		<p:commandButton value="#{msg['pages.comuns.form.btnSalvar']}" action="#{dissertativaManagedBean.salvar}"
+			update=":formDissertativas, :formTableDissertativas" />
+	</h:form>
+
+    <h3><p:outputLabel value="#{msg['pages.cadastroDissertativa.tableTitle']}" /> </h3>
+    
+	<h:form id="formTableDissertativas">
+	
+		<p:dataTable value="#{dissertativaManagedBean.dissertativas}" var="prod"
+			editable="true" id="tableDissertativas">
+
+            <p:ajax event="rowEdit" listener="#{dissertativaManagedBean.onRowEdit}" update="tableDissertativas"/>
+
+			<p:column headerText="#{msg['pages.cadastroDissertativa.codigo']}">
+				<h:outputText value="#{prod.codigo}" />
+			</p:column>
+
+			<p:column headerText="#{msg['pages.cadastroDissertativa.enunciado']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.enunciado}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="enunciado" value="#{prod.enunciado}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="#{msg['pages.cadastroDissertativa.conteudo.nome']}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.conteudo.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{prod.conteudo}"
+							converter="converterConteudo" style="width:100%">
+							<f:selectItem itemValue="" itemLabel="#{msg['pages.cadastroDissertativa.conteudo.msg']}" />
+							<f:selectItems value="#{dissertativaManagedBean.conteudos}"
+								var="aux" itemValue="#{aux}" itemLabel="#{aux.nome}" />
+						</p:selectOneMenu>
+
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="#{msg['pages.cadastroDissertativa.nivel']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.nivel}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="nivel" value="#{prod.nivel}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroDissertativa.respostadis']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.respostadis}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="respostadis" value="#{prod.respostadis}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="#{msg['pages.cadastroDissertativa.tempo']}">
+				  <p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.tempo}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="tempo" value="#{prod.tempo}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:70px" headerText="#{msg['pages.commus.form.opcoes']}">
+
+					<p:rowEditor />
+					
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{dissertativaManagedBean.remove(prod)}"
+						update=":formTableDissertativas" />
+
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+	</ui:define>
+</ui:composition>
